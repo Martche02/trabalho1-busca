@@ -294,15 +294,15 @@ class CornersProblem(search.SearchProblem):
         Returns the start state (in your state space, not the full Pacman state
         space)
         """
-        "*** YOUR CODE HERE ***"
-        util.raiseNotDefined()
+        starting_visited = tuple(self.startingPosition == corner for corner in self.corners)
+        return (self.startingPosition, starting_visited)
 
     def isGoalState(self, state):
         """
         Returns whether this search state is a goal state of the problem.
         """
-        "*** YOUR CODE HERE ***"
-        util.raiseNotDefined()
+        position, visited_corners = state
+        return all(visited_corners)
 
     def getSuccessors(self, state):
         """
@@ -316,15 +316,19 @@ class CornersProblem(search.SearchProblem):
         """
 
         successors = []
+        position, visited_corners = state
+        x, y = position
         for action in [Directions.NORTH, Directions.SOUTH, Directions.EAST, Directions.WEST]:
-            # Add a successor state to the successor list if the action is legal
-            # Here's a code snippet for figuring out whether a new position hits a wall:
-            #   x,y = currentPosition
-            #   dx, dy = Actions.directionToVector(action)
-            #   nextx, nexty = int(x + dx), int(y + dy)
-            #   hitsWall = self.walls[nextx][nexty]
-
-            "*** YOUR CODE HERE ***"
+            dx, dy = Actions.directionToVector(action)
+            nextx, nexty = int(x + dx), int(y + dy)
+            if not self.walls[nextx][nexty]:
+                next_position = (nextx, nexty)
+                new_visited_corners = list(visited_corners)
+                for i, corner in enumerate(self.corners):
+                    if next_position == corner:
+                        new_visited_corners[i] = True
+                successor_state = (next_position, tuple(new_visited_corners))
+                successors.append((successor_state, action, 1))
 
         self._expanded += 1 # DO NOT CHANGE
         return successors
@@ -453,8 +457,33 @@ def foodHeuristic(state, problem):
     problem.heuristicInfo['wallCount']
     """
     position, foodGrid = state
-    "*** YOUR CODE HERE ***"
-    return 0
+    foodList = foodGrid.asList()
+    if not foodList:
+        return 0
+    def getDist(p1, p2):
+        key = (min(p1, p2), max(p1, p2))
+        if key not in problem.heuristicInfo:
+            problem.heuristicInfo[key] = mazeDistance(p1, p2, problem.startingGameState)
+        return problem.heuristicInfo[key]
+    n = len(foodList)
+    visited = [False] * n
+    min_dist = [float('inf')] * n
+    min_dist[0] = 0
+    mst_weight = 0
+    for _ in range(n):
+        u = -1
+        for i in range(n):
+            if not visited[i] and (u == -1 or min_dist[i] < min_dist[u]):
+                u = i
+        visited[u] = True
+        mst_weight += min_dist[u]
+        for v in range(n):
+            if not visited[v]:
+                d = getDist(foodList[u], foodList[v])
+                if d < min_dist[v]:
+                    min_dist[v] = d
+    min_pacman_dist = min(getDist(position, food) for food in foodList)
+    return mst_weight + min_pacman_dist
 
 class ClosestDotSearchAgent(SearchAgent):
     "Search for all food using a sequence of searches"
