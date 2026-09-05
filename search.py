@@ -112,7 +112,7 @@ def breadthFirstSearch(problem):
     """Search the shallowest nodes in the search tree first."""
     "*** YOUR CODE HERE ***"
     #inicializa Fila da fronteira
-    frontier = util.Queue
+    frontier = util.Queue()
     visited = set()
 
     start_state = problem.getStartState()
@@ -124,12 +124,11 @@ def breadthFirstSearch(problem):
 
         if problem.isGoalState(state):
             return path
-
-        if state not in visited:
-            visited.add(state)
-            for sucessor,action, step_cost in problem.getSUcessor(state):
-                if sucessor not in visited:
-                    frontier.push((sucessor, path + [action]))
+        
+        for sucessor,action, step_cost in problem.getSuccessors(state):
+            if sucessor not in visited:
+                visited.add(sucessor)
+                frontier.push((sucessor, path + [action]))
 
     return []
 
