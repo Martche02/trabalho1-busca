@@ -61,7 +61,7 @@ return total
 
 - **Admissibilidade**
 
-A distância de Manhattan entre dois pontos no labirinto é sempre menor ou igual a distância real entre eles de fato, uma vez que as paredes podem aumentar essa valor, que é o mínimo pois considera as distâncias em linha reta. Dessa forma, como a heurística apenas considera a soma de todas essa distâncias entre os cantos a serem alcançados e para cada caminho o custo real é sempre maior ou igual ao custo especulado, a heurística nunca superestima o custo sendo assim admissível.
+A distância de Manhattan entre dois pontos no labirinto é sempre menor ou igual a distância real entre eles de fato, uma vez que as paredes podem aumentar essa valor, que é o mínimo pois considera as distâncias em linha reta. Dessa forma, como a heurística apenas considera a soma de todas essa distâncias entre os cantos a serem alcançados e para cada caminho o custo real é sempre maior ou igual ao custo especulado, a heurística nunca superestima o custo sendo assim admissível. A consistência nesse caso é justificada pelo fato de que a distância de Manhattan é recalculada a cada passo, o que significa que qualquer movimento gera um cálculo novo que desconsidera no máximo uma unidade para a heurística, visto que a distância de Manhattan opera com distância em linha reta, as mesmas dos passos do pacman.
 
 - **Dados**
 
@@ -100,7 +100,7 @@ return menor_dist + peso_mst
 
 - **Admissibilidade**
 
-Para alcançar o objetivo são necessárias duas coisas: chegar a primeira comida e percorrer todas as comidas. Como todas as distâncias entre cada comida e pacman são distâncias reais, o custo até cada comida logo é sempre maior ou igual a variável menor_dist, visto que ela busca a comida mais próxima considerando a distância real até ela. Além disso, como a MST é a árvore mínima para determinado caminho ela já busca o menor caminho entre cada comida que deverá ser consumida pelo pacman e, portanto, o peso dessa árvore é o custo mínimo para se percorrer esse caminho. Assim, garantindo que tanto o custo para a comida mais próxima, como o trajeto para as demais é menor ou igual que o custo real a ser traçado, a heurística é admissível. Fora isso, a consistência da heurística se firma no fato de que apenas distâncias reais são utilizadas, o que é calculado via BFS, evitando assim problemas com estimativas.
+Para alcançar o objetivo são necessárias duas coisas: chegar a primeira comida e percorrer todas as comidas. Como todas as distâncias entre cada comida e pacman são distâncias reais, o custo até cada comida logo é sempre maior ou igual a variável menor_dist, visto que ela busca a comida mais próxima considerando a distância real até ela. Além disso, como a MST é a árvore mínima para determinado caminho ela já busca o menor caminho entre cada comida que deverá ser consumida pelo pacman e, portanto, o peso dessa árvore é o custo mínimo para se percorrer esse caminho. Assim, garantindo que tanto o custo para a comida mais próxima, como o trajeto para as demais é menor ou igual que o custo real a ser traçado, a heurística é admissível. Fora isso, a consistência da heurística se firma no fato de que apenas distâncias reais são utilizadas, o que é calculado via BFS, evitando assim problemas com estimativas, ou seja, mudanças na trajetória não irão levar a valores irregulares da heurística, visto que qualquer passo irá alterar em no máximo 1 unidade para o cálculo da distância real entre o pacman e a comida.
 
 ## **Dados**
 
