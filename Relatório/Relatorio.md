@@ -8,9 +8,9 @@
 
 Todos os algoritmos de busca implementados seguiram um padrão de busca em grafos, variando principalmente a estrutura de dados utilizada para tratar a fronteira.
 
-- **BFS**: Fronteira representada por pilha (util.Stack), garantindo que o nó expandido seja o recém descoberto.
+- **DFS**: Fronteira representada por pilha (util.Stack), garantindo que o nó expandido seja o recém descoberto.
 
-- **DFS**: Fronteira representada por fila (util.Queue), expandindo nós que distam de camadas diferentes, permitindo otimização de espaço.
+- **BFS**: Fronteira representada por fila (util.Queue), expandindo nós que distam de camadas diferentes, permitindo otimização de espaço.
 
 - **UCS**: Fronteira representada por fila de prioridades (util.PriorityQueue), orientada pelo custo acumulado 
 g(n) do caminho para cada estado, visando o menor custo.
@@ -26,9 +26,9 @@ Os algoritmos de A* e UCS possuem a lógica de marcar um estado como visitado so
 O estado do CornersProblem foi representado por uma tupla:
 estado = (posicao_atual, booleano_cantos)
 
-posicao_atual é uma tupla com valores de x e y guardando o endereço dos cantos no mapa.
+posicao_atual é uma tupla com valores de x e y indicando a posição do pacman no momento.
 
-booleano_cantos é um conjunto contendo os valores lógicos (True or False) referente a cada um dos 4 cantos e o valor diz se foi ou não visitado.
+booleano_cantos é uma tupla contendo os valores lógicos (True or False) referente a cada um dos 4 cantos e o valor diz se foi ou não visitado.
 
 - **Porque é suficiente?**
 
@@ -61,7 +61,7 @@ return total
 
 - **Admissibilidade**
 
-A distância de Manhattan entre dois pontos no labirinto é sempre menor ou igual a distância real entre eles de fato, uma vez que as paredes podem aumentar essa valor, que é o mínimo pois considera as distâncias em linha reta. Dessa forma, como a heurística apenas considera a soma de todas essa distâncias entre os cantos a serem alcançados e para cada caminho o custo real é sempre maior ou igual ao custo especulado, a heurística nunca superestima o custo sendo assim admissível. Além disso, ela é consistente por, nos testes realizados, expandir menos nós do que com o algoritmo UCS.
+A distância de Manhattan entre dois pontos no labirinto é sempre menor ou igual a distância real entre eles de fato, uma vez que as paredes podem aumentar essa valor, que é o mínimo pois considera as distâncias em linha reta. Dessa forma, como a heurística apenas considera a soma de todas essa distâncias entre os cantos a serem alcançados e para cada caminho o custo real é sempre maior ou igual ao custo especulado, a heurística nunca superestima o custo sendo assim admissível.
 
 - **Dados**
 
@@ -81,7 +81,7 @@ Considera a árvore que contém as comidas restantes no labirinto tendo a distâ
 
 - **Distância entre posição atual e Comida restante**
 
-Estima o custo do pacman para a raiz da mst formada conforme os padrões ditos anteriormente.
+Estima o custo do pacman para a comida mais próxima entre as restantes.
 
 A heurísitica então retorna a soma desses componentes.Como o cálculo das distância é feito via BFS, problem.heuristicInfo guarda as informações em cache, evitando cálculos extras e desnecessários.
 
@@ -93,7 +93,7 @@ If comida == 0: return 0
 Constrói mst com pontos de comida restante
 peso_mst <- soma arestas da mst via algoritmo de prim
 
-menor_dist <- menor aresta entre a distância entre pacman e cada comida restante
+menor_dist <- menor distância real entre o pacman e cada comida restante
 
 return menor_dist + peso_mst
 ```
@@ -122,7 +122,7 @@ Custo do caminho: 60
 
 # **Uso de IA**
 
-- Nosso grupo utilizou da llm Claude, com o intuito de compreender bem o código fornecido, além de compreender como fazer relatórios em arquivos do tipo .md e para uma linha de código do remaining, utilizada durante o problema CornersHeuristic (Problema 7), a linha estará em destaque abaixo.
+- Nosso grupo utilizou da llm Claude, com o intuito de compreender bem o código fornecido, além de compreender como fazer relatórios em arquivos do tipo .md e para uma linha de código do remaining, utilizada durante o problema CornersHeuristic (Problema 6), a linha estará em destaque abaixo.
 
 ```Python
  remaining = [corner for corner, visited in zip(corners, visited_corners) if not visited]
